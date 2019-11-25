@@ -39,10 +39,15 @@ module Enumerable
         end
         true
     end
+    def my_any?
+        if block_given?
+            my_each do |x|
+                return true if yield(x)
+            end
+            false
+        end
+    end
 
     
 end
 
-[1,2,3,4].my_each do |x|
-    puts x ** 2
-end

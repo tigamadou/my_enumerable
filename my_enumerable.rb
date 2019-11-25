@@ -37,9 +37,9 @@ module Enumerable
             end
             return true
         end
-        true
+        
     end
-
+    
     def my_any?
         if block_given?
             my_each do |x|
@@ -60,3 +60,6 @@ module Enumerable
     
 end
 
+p [2,3,8,5,15].my_all?{ |x| x<10 }
+
+p [2,3,8,5,15].all?{ |x| x<10}

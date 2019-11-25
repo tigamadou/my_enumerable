@@ -30,6 +30,16 @@ module Enumerable
         end
     end
 
+    def my_all?
+        if block_given?
+            self.my_each do |x|
+                return false if !yield(x)
+            end
+            return true
+        end
+        true
+    end
+
     
 end
 

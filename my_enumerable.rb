@@ -72,7 +72,18 @@ module Enumerable
     end
     count
   end
+
+  def my_map
+    r=[]
+    self.my_each do |x|
+        r << yield(x)
+    end
+    r
+
+  end
   
 end
 
-
+p [1,2,3,4,4,7,7,7,9].my_map { |i| i*4 }
+puts
+p [1,2,3,4,4,7,7,7,9].map { |i| i*4 }

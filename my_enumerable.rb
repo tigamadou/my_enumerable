@@ -18,6 +18,18 @@ module Enumerable
         self
     end
 
+    def my_select
+        if block_given?
+            r=[]
+            self.my_each do |x|
+                if yield(x)
+                    r << x
+                end
+            end
+            r
+        end
+    end
+
     
 end
 

@@ -39,6 +39,7 @@ module Enumerable
         end
         true
     end
+
     def my_any?
         if block_given?
             my_each do |x|
@@ -48,6 +49,14 @@ module Enumerable
         end
     end
 
+    def my_none?
+        if block_given?
+            my_each do |x|
+                return false if yield(x)
+            end
+            true
+        end
+    end
     
 end
 

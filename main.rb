@@ -50,35 +50,32 @@ module Enumerable
   end
 
   def my_none?(pattern = nil)
-    r = true
     if block_given?
-      my_each { |x| r = false if yield x }
-    elsif pattern
+      my_each do |x|
+        return false if yield x
+      end
+    elsif !pattern.nil?
       if pattern.is_a?(Class)
-        my_each { |x| r = false if x.is_a?(pattern) }
+        my_each { |x| return false if x.is_a?(pattern) }
       elsif pattern.is_a?(Regexp)
-        my_each { |x| r = false if pattern.match(x.to_s) }
+        my_each { |x| return false if pattern.match(x.to_s) }
       else
-        my_each { |x| r = false if x == pattern }
+        my_each { |x| return false if x == pattern }
       end
     else
-      my_each { |x| r = false if x }
+      my_each { |x| return false if x }
     end
-    r
+    true
   end
 
   def my_count(number = nil)
     count = 0
-    if !block_given? && number.nil?
+    if !block_given?
       count = length
-    elsif !block_given? && !number.nil?
-      my_each do |x|
-        count += 1 if x == number
-      end
+    elsif !number.nil?
+      my_each { |x| count += 1 if x == number }
     else
-      my_each do |x|
-        count += 1 if yield(x)
-      end
+      my_each { |x| count += 1 if yield(x) }
     end
     count
   end

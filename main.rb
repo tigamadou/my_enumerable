@@ -113,5 +113,3 @@ module Enumerable
     [result, sym]
   end
 end
-
-# p %w{ant bear cat}.my_none?(/d/)                        #=> true

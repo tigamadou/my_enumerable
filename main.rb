@@ -49,21 +49,21 @@ module Enumerable
     r
   end
 
-  def my_none?(pattern = nil)
+  def my_none?(pat = nil)
     if block_given?
-      my_each do |x|
-        return false if yield x
-      end
-    elsif !pattern.nil?
-      if pattern.is_a?(Class)
-        my_each { |x| return false if x.is_a?(pattern) }
-      elsif pattern.is_a?(Regexp)
-        my_each { |x| return false if pattern.match(x.to_s) }
+      my_each { |x| return false if yield(x) }
+    elsif !pat.nil?
+      if pat.is_a?(Class)
+        my_each { |x| return false if x.is_a?(pat) }
+      elsif pat.is_a?(Regexp)
+        my_each { |x| return false if pat.match(x.to_s) }
       else
-        my_each { |x| return false if x == pattern }
+        my_each { |x| return false if x == pat }
       end
     else
-      my_each { |x| return false if x }
+      my_each do |x|
+        return false if x
+      end
     end
     true
   end

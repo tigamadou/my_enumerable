@@ -19,6 +19,10 @@ Metrics/ClassLength:
   Max: 150
 Metrics/BlockLength:
   ExcludedMethods: ['describe']
+Metrics/PerceivedComplexity:
+  Enabled: false
+Metrics/CyclomaticComplexity:
+  Enabled: false
 
 Style/Documentation:
   Enabled: false
@@ -26,7 +30,7 @@ Style/ClassAndModuleChildren:
   Enabled: false
 Style/CaseEquality:
   Enabled: false
-  
+
 Layout/AlignHash:
   EnforcedColonStyle: key
 Layout/ExtraSpacing:

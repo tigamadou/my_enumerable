@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './my_enumerable.rb'
+require './main.rb'
 
 def check_test(result, requirements)
   r = true
@@ -139,4 +139,4 @@ def test_my_inject
   check_test(rs, rq)
 end
 
-test_my_inject
+test_my_none

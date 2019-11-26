@@ -1,4 +1,4 @@
-# Project-Enumerable-Methods
+# My Ruby Enumerable Module
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]

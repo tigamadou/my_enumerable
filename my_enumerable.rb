@@ -3,12 +3,12 @@
 module Enumerable
   def my_each
     return to_enum unless block_given?
-    for i in 0...self.length do
-        yield self[i] 
+
+    (0...length).each do |i|
+      yield self[i]
     end
     self
   end
-  
 
   def my_each_with_index
     return to_enum unless block_given?
@@ -19,8 +19,9 @@ module Enumerable
 
   def my_select
     return to_enum unless block_given?
+
     r = []
-    self.my_each { |x| r << x if yield x }
+    my_each { |x| r << x if yield x }
     r
   end
 
@@ -36,27 +37,33 @@ module Enumerable
     r
   end
 
-  def my_any?(pattern=nil)
-    r=false
+  def my_any?(pattern = nil)
+    r = false
     if block_given?
-        my_each {|x| r=true if yield x}
+      my_each { |x| r = true if yield x }
     elsif pattern
-        my_each { |x| r = true if pattern === x }
+      my_each { |x| r = true if pattern === x }
     else
-    my_each { |x| r = true if  x}
+      my_each { |x| r = true if x }
     end
     r
   end
 
-  def my_none?(pattern=nil)
+  def my_none?(pattern = nil)
     r = true
     if block_given?
-        my_each { |x| r = false if yield x}
+      my_each { |x| r = false if yield x }
     elsif pattern
-        my_each { |x| r = false if x === pattern}
+      if pattern.is_a?(Class)
+        my_each { |x| r = false if x.is_a?(pattern) }
+      elsif pattern.is_a?(Regexp)
+        my_each { |x| r = false if pattern.match(x.to_s) }
+      else
+        my_each { |x| r = false if x == pattern }
+      end
     else
-        my_each { |x| r = false if  x }
-    end    
+      my_each { |x| r = false if x }
+    end
     r
   end
 
@@ -69,7 +76,6 @@ module Enumerable
         count += 1 if x == number
       end
     else
-
       my_each do |x|
         count += 1 if yield(x)
       end
@@ -79,29 +85,33 @@ module Enumerable
 
   def my_map
     return to_enum unless block_given?
+
     r = []
-    my_each do |x|
-      r << yield(x)
-    end
+    my_each { |x| r << yield(x) } if proc.nil?
+    my_each { |x| r << proc.call(x) } unless proc.nil?
     r
   end
 
-  def my_inject(*params)
-    # if (initial, sym)
-    if init && symb && symb.is_a?(Symbol)
-      my_each do |x|
-        init = init.method(symb).call(x)
-      end
-    # if (symb)
-    elsif init && init.is_a?(Symbol) && symb.nil?
-      memo, *elements = self
-      elements.my_each do |x|
-        memo = memo.method(init).call(x)
-      end
-      memo
+  def my_inject(*args)
+    result, sym = inj_param(*args)
+    arr = result ? to_a : to_a[1..-1]
+    result ||= to_a[0]
+    if block_given?
+      arr.my_each { |x| result = yield(result, x) }
+    elsif sym
+      arr.my_each { |x| result = result.public_send(sym, x) }
     end
-    init
+    result
+  end
+
+  def inj_param(*args)
+    result, sym = nil
+    args.my_each do |arg|
+      result = arg if arg.is_a? Numeric
+      sym = arg unless arg.is_a? Numeric
+    end
+    [result, sym]
   end
 end
 
-#p %w{ant bear cat}.my_none?(/d/)                        #=> true
+# p %w{ant bear cat}.my_none?(/d/)                        #=> true

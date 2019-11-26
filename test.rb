@@ -139,4 +139,4 @@ def test_my_inject
   check_test(rs, rq)
 end
 
-test_my_none
+test_my_count

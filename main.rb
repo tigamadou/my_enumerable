@@ -70,12 +70,13 @@ module Enumerable
 
   def my_count(number = nil)
     count = 0
-    if !block_given?
-      count = length
-    elsif !number.nil?
+    if block_given?
+      my_each { |x| count += 1 if yield(x) }
+
+    elsif number
       my_each { |x| count += 1 if x == number }
     else
-      my_each { |x| count += 1 if yield(x) }
+      count = length
     end
     count
   end

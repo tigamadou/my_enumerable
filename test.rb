@@ -1,12 +1,14 @@
-require "./main.rb"
+# frozen_string_literal: true
+
+require './main.rb'
 
 class EnumTest
-  include Enumerable  
-  
+  include Enumerable
   def initialize
-    @results={}
+    @results = {}
   end
-  def testAll(det=nil)
+
+  def run_all(det = nil)
     test_my_select
     test_my_all
     test_my_any
@@ -16,45 +18,42 @@ class EnumTest
     test_my_inject
     r = nil
     if det
-      r= @results
+      r = @results
     else
-      @results.all? do |x, array| 
-        if array[:result]
-          r= true
-        else
-          r= false
-        end
+      @results.all? do |_x, array|
+        r = if array[:result]
+              true
+            else
+              false
+            end
       end
     end
 
     r
-    
-      
   end
-
 
   def check_test(name, result, requirements)
     r = true
     success = []
-    fails = ""
+    fails = ''
     if result.length == requirements.length
       (0...requirements.length).each do |i|
         r = false unless result[i] == requirements[i]
         if result[i] == requirements[i]
           success << i
         else
-          fails+= "Test #{i + 1} - "
+          fails += "Test #{i + 1} - "
         end
       end
     end
     test = {}
-    
-    test[:result]= r
+
+    test[:result] = r
     test[:success] = 'Tests Succeeded' if r
     test[:fail] = "Tests Failed : #{fails.upcase}" unless r
     test[:ratio] = "#{success.length}/#{result.length}"
-    @results["#{name}"] = test
-    return @results
+    @results[name.to_s] = test
+    @results
   end
 
   def test_my_select
@@ -66,14 +65,12 @@ class EnumTest
     rq << [2, 4]
     rs << %i[foo bar].my_select { |x| x == :foo }
     rq << [:foo]
-
-    check_test("my_select",rs, rq)
+    check_test('my_select', rs, rq)
   end
 
   def test_my_all
     rs = []
     rq = []
-
     rs << %w[ant bear cat].my_all? { |word| word.length >= 3 }
     rq << true
     rs << %w[ant bear cat].my_all? { |word| word.length >= 4 }
@@ -86,14 +83,12 @@ class EnumTest
     rq << false
     rs << [].my_all?
     rq << true
-
-    check_test("my_all",rs, rq)
+    check_test('my_all', rs, rq)
   end
 
   def test_my_any
     rs = []
     rq = []
-
     rs << %w[ant bear cat].my_any? { |word| word.length >= 3 }
     rq << true
     rs << %w[ant bear cat].my_any? { |word| word.length >= 4 }
@@ -106,8 +101,7 @@ class EnumTest
     rq << true
     rs << [].any?
     rq << false
-
-    check_test("my_any",rs, rq)
+    check_test('my_any', rs, rq)
   end
 
   def test_my_none
@@ -129,7 +123,7 @@ class EnumTest
     rq << true
     rs << [nil, false, true].my_none? #=> false
     rq << false
-    check_test("my_none",rs, rq)
+    check_test('my_none', rs, rq)
   end
 
   def test_my_count
@@ -142,8 +136,7 @@ class EnumTest
     rq << 2
     rs << ary.my_count(&:even?) #=> 3
     rq << 3
-
-    check_test("my_count",rs, rq)
+    check_test('my_count', rs, rq)
   end
 
   def test_my_map
@@ -153,7 +146,7 @@ class EnumTest
     rq << [1, 4, 9, 16]
     rs << [1, 2, 3, 4].my_map { 'cat' } #=> ["cat", "cat", "cat", "cat"]
     rq << %w[cat cat cat cat]
-    check_test("my_map",rs, rq)
+    check_test('my_map', rs, rq)
   end
 
   def test_my_inject
@@ -171,8 +164,7 @@ class EnumTest
       memo.length > word.length ? memo : word
     end
     rq << 'sheep'
-
-    check_test("my_inject",rs, rq)
+    check_test('my_inject', rs, rq)
   end
 end
 
